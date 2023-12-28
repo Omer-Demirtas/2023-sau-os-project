@@ -1,10 +1,8 @@
 package main.java.com.dispatcher;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import main.java.com.dispatcher.queue.Queue;
 import main.java.com.dispatcher.queue.RunTimeQueue;
@@ -22,7 +20,10 @@ public class Dispatacher {
         new Process(5L, 1, 2, 0),
         new Process(6L, 1, 3, 0),
         new Process(7L, 1, 3, 0),
-        new Process(8L, 1, 3, 0)
+        new Process(8L, 1, 0, 0),
+        new Process(9L, 1, 0, 0),
+        new Process(10L, 1, 0, 0),
+        new Process(11L, 1, 0, 0)
     ));
 
     List<Queue> queues = List.of(
@@ -56,7 +57,7 @@ public class Dispatacher {
                 if (queue.process(TICK_TAK_TIME)) break;  
             }
         
-            if (time == 10) {
+            if (time == 100) {
                 break;
             }
         }
