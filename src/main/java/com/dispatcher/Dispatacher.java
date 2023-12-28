@@ -18,8 +18,11 @@ public class Dispatacher {
         while (true) {
             //dagiciti(time++);
             time++;
-            
-            for (Queue queue : queues) if (queue.process()) break;                    
+            for (Queue queue : queues) {
+                System.out.println(queue.getSize());
+                if (queue.process()) break;  
+                System.out.println(queue.getSize());                  
+            }
         
             if (time == 10) {
                 break;

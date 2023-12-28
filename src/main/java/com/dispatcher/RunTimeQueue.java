@@ -14,10 +14,15 @@ public class RunTimeQueue extends Queue {
 
     @Override
     boolean process() {        
-        Process process = procesess.get(0);
+        Process process = procesess.stream().findFirst().orElse(null);
         
         if (process == null) return false;
-        
+
+        // process bitecek
+        if (process.processTime - 1 == 0) {
+            procesess.remove(0);
+        } 
+
         process.run();
 
         return true;
