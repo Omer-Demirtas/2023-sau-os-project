@@ -10,12 +10,12 @@ public class RunTimeQueue extends Queue {
     }
 
     @Override
-    Process addProcess(Process process) {
-        return null;
+    public void addProcess(Process process) {
+        procesess.add(process);
     }
 
     @Override
-    boolean process() {        
+    public boolean process() {        
         System.out.println("Real Time Queue");
         Process process = procesess.stream().findFirst().orElse(null);
         

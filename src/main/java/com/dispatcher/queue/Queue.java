@@ -6,11 +6,11 @@ import java.util.List;
 import main.java.com.dispatcher.Process;
 
 public abstract class Queue {
-    List<Process> procesess = new ArrayList<>(List.of(new Process(1L, 1)));
+    List<Process> procesess = new ArrayList<>();
 
-    abstract Process addProcess(Process process); 
+    public abstract void addProcess(Process process); 
     
-    abstract boolean process();
+    public abstract boolean process();
 
     Integer getSize() {
         return procesess.size();
