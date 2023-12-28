@@ -23,21 +23,54 @@ public class UserJobQueue extends Queue {
 
     @Override
     public void addProcess(Process process) {
+        System.out.println(String.format("Process(%d) added", process.getId()));
         processPriorityList.get(process.getPriority() - 1).add(process);
     }
 
     @Override
-    public boolean process() {
-        Process process = procesess.stream().findFirst().orElse(null);
-        
-        if (process == null) return false;
+    public boolean process(Integer tickTakTime) {
+        //System.out.println("User Job Queue");
 
-        // process bitecek
-        if (process.processTime - 1 == 0) {
-            procesess.remove(0);
-        } 
+        processPriorityList.forEach(t -> System.out.println("-> " + t.size()));
 
-        process.run();
+        for (int i = 0; i < processPriorityList.size(); i++) {
+            List<Process> processList = processPriorityList.get(i);
+
+            for (int j = 0; j < processList.size(); j++) {
+                Process process = processList.get(j);
+
+                // İlgili process bitmiyorsa
+                if (process.getProcessTime() - tickTakTime > 0) {
+                    if (process.getPriority() != processPriorityList.size()) { 
+                        Integer processTime = process.getProcessTime();
+                        
+                        process.run(tickTakTime, process.getPriority() + 1);
+
+                        tickTakTime-=processTime;
+
+                        processPriorityList.get(i).remove(j);
+                        processPriorityList.get(i + 1).add(process);
+                    } else { // Process en düşük öncelikteyse
+                        Integer processTime = process.getProcessTime();
+
+                        process.run(tickTakTime);
+                    
+                        tickTakTime-=processTime;
+                    }
+                } else { // İlgili process bitiyor ise
+                    Integer processTime = process.getProcessTime();
+
+                    process.run(tickTakTime);
+
+                    tickTakTime-=processTime;
+                    processPriorityList.get(i).remove(j);
+                }
+
+                if (tickTakTime <= 0) {
+                    return true;
+                }
+            }
+        }
 
         return true;
     }

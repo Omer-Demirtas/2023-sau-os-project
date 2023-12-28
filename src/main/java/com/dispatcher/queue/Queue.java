@@ -10,7 +10,7 @@ public abstract class Queue {
 
     public abstract void addProcess(Process process); 
     
-    public abstract boolean process();
+    public abstract boolean process(Integer tickTakTime);
 
     Integer getSize() {
         return procesess.size();

@@ -1,5 +1,8 @@
 package main.java.com.dispatcher;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -8,16 +11,19 @@ import main.java.com.dispatcher.queue.RunTimeQueue;
 import main.java.com.dispatcher.queue.UserJobQueue;
 
 public class Dispatacher {
-    Map<Integer, Process> proMapIsmailReis = Map.of(
-        0, new Process(1L, 1, 0),
-        0, new Process(2L, 1, 0),
-        1, new Process(3L, 1, 0),
-        1, new Process(4L, 1, 0),
-        2, new Process(5L, 1, 0),
-        2, new Process(6L, 1, 0),
-        3, new Process(7L, 1, 0),
-        3, new Process(8L, 1, 0)
-    );
+    private final Integer TICK_TAK_TIME = 1;
+
+    List<Process> proMapIsmailReis = new ArrayList<>(
+        Arrays.asList(
+        new Process(1L, 1, 1, 0),
+        new Process(2L, 3, 1, 0),
+        new Process(3L, 1, 1, 0),
+        new Process(4L, 1, 2, 0),
+        new Process(5L, 1, 2, 0),
+        new Process(6L, 1, 3, 0),
+        new Process(7L, 1, 3, 0),
+        new Process(8L, 1, 3, 0)
+    ));
 
     List<Queue> queues = List.of(
         new RunTimeQueue(null),
@@ -25,13 +31,17 @@ public class Dispatacher {
     );
 
     private void dispatch(Integer currentTime) {
-        proMapIsmailReis.forEach((arriveTime, process) -> {
+        System.out.println(String.format("Dispatch(%d)", currentTime));
+
+        proMapIsmailReis.stream().filter(p -> p.getArriveTime() == currentTime).forEach(process -> {
             if (process.getPriority() == 0) {
                 queues.get(0).addProcess(process);
             } else {
                 queues.get(1).addProcess(process);
             }
         });
+
+        proMapIsmailReis.removeIf(process -> process.getArriveTime() == currentTime);
     }
 
     public void start() {
@@ -39,10 +49,11 @@ public class Dispatacher {
         int time=0;
 
         while (true) {
+            System.out.println("time " + time);
             dispatch(time++);
 
             for (Queue queue : queues) {
-                if (queue.process()) break;  
+                if (queue.process(TICK_TAK_TIME)) break;  
             }
         
             if (time == 10) {

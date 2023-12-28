@@ -12,13 +12,20 @@ public class Process {
     public Integer printerCount;
     public Integer scannerCount;
 
-    public void run() {
-        System.out.println(String.format("Process %s running...",  id));
+    public void run(Integer ticktakTime) {
+        this.processTime-=ticktakTime;
+        System.out.println(String.format("Process(%s) running...",  id));
     }
 
-    public Process(Long id, Integer processTime, Integer priority) {
+    public void run(Integer ticktakTime, Integer priority) {
+        this.priority = priority;
+        run(ticktakTime);
+    }
+
+    public Process(Long id, Integer processTime, Integer priority, Integer arriveTime) {
         this.id = id;
         this.priority = priority;
+        this.arriveTime = arriveTime;
         this.processTime = processTime;
     }
 
