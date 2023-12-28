@@ -1,4 +1,6 @@
-package main.java.com.dispatcher;
+package main.java.com.dispatcher.queue;
+
+import main.java.com.dispatcher.Process;
 
 public class RunTimeQueue extends Queue {
     String resource;
@@ -14,6 +16,7 @@ public class RunTimeQueue extends Queue {
 
     @Override
     boolean process() {        
+        System.out.println("Real Time Queue");
         Process process = procesess.stream().findFirst().orElse(null);
         
         if (process == null) return false;

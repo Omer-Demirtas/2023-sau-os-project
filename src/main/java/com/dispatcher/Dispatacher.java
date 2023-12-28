@@ -2,6 +2,9 @@ package main.java.com.dispatcher;
 
 import java.util.List;
 
+import main.java.com.dispatcher.queue.Queue;
+import main.java.com.dispatcher.queue.RunTimeQueue;
+
 public class Dispatacher {
     
     static List<Queue> queues = List.of(
@@ -19,9 +22,7 @@ public class Dispatacher {
             //dagiciti(time++);
             time++;
             for (Queue queue : queues) {
-                System.out.println(queue.getSize());
                 if (queue.process()) break;  
-                System.out.println(queue.getSize());                  
             }
         
             if (time == 10) {

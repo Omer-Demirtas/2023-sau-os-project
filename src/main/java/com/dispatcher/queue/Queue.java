@@ -1,7 +1,9 @@
-package main.java.com.dispatcher;
+package main.java.com.dispatcher.queue;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import main.java.com.dispatcher.Process;
 
 public abstract class Queue {
     List<Process> procesess = new ArrayList<>(List.of(new Process(1L, 1)));
