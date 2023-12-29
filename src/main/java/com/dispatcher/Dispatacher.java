@@ -1,8 +1,11 @@
 package main.java.com.dispatcher;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 import main.java.com.dispatcher.queue.Queue;
 import main.java.com.dispatcher.queue.RunTimeQueue;
@@ -11,20 +14,7 @@ import main.java.com.dispatcher.queue.UserJobQueue;
 public class Dispatacher {
     private final Integer TICK_TAK_TIME = 1;
 
-    List<Process> proMapIsmailReis = new ArrayList<>(
-        Arrays.asList(
-        new Process(1L, 1, 1, 0),
-        new Process(2L, 3, 1, 0),
-        new Process(3L, 1, 1, 0),
-        new Process(4L, 1, 2, 0),
-        new Process(5L, 1, 2, 0),
-        new Process(6L, 1, 3, 0),
-        new Process(7L, 1, 3, 0),
-        new Process(8L, 1, 0, 0),
-        new Process(9L, 1, 0, 0),
-        new Process(10L, 1, 0, 0),
-        new Process(11L, 1, 0, 0)
-    ));
+    List<Process> processes = new ArrayList<>();
 
     List<Queue> queues = List.of(
         new RunTimeQueue(null),
@@ -34,7 +24,7 @@ public class Dispatacher {
     private void dispatch(Integer currentTime) {
         System.out.println(String.format("Dispatch(%d)", currentTime));
 
-        proMapIsmailReis.stream().filter(p -> p.getArriveTime() == currentTime).forEach(process -> {
+        processes.stream().filter(p -> p.getArriveTime() == currentTime).forEach(process -> {
             if (process.getPriority() == 0) {
                 queues.get(0).addProcess(process);
             } else {
@@ -42,25 +32,49 @@ public class Dispatacher {
             }
         });
 
-        proMapIsmailReis.removeIf(process -> process.getArriveTime() == currentTime);
+        processes.removeIf(process -> process.getArriveTime() == currentTime);
     }
 
     public void start() {
-    
         int time=0;
-
         while (true) {
             System.out.println("time " + time);
             dispatch(time++);
 
             for (Queue queue : queues) {
-                if (queue.process(TICK_TAK_TIME)) break;  
+                if (queue.process(TICK_TAK_TIME)) break;
             }
-        
+
             if (time == 100) {
                 break;
             }
         }
+    }
 
+    public void readFile(String path) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) {
+                    break;
+                }
+
+                String[] tokens = line.split(",");
+                int[] nums = new int[8];
+
+                for (int i = 0; i < tokens.length; i++) {
+                    nums[i] = Integer.parseInt(tokens[i].trim());
+                }
+
+                processes.add(new Process(
+                    Long.parseLong(tokens[0].trim()),
+                    nums[1],
+                    nums[2],
+                    nums[3]
+                ));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
