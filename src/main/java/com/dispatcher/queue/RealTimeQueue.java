@@ -16,21 +16,29 @@ public class RealTimeQueue extends Queue {
     }
 
     @Override
-    public boolean process(Integer tickTakTime) {        
-        //System.out.println("Real Time Queue " + procesess.size());
+    public boolean process(Integer tickTakTime) {
+        // System.out.println("Real Time Queue " + procesess.size());
         Process process = procesess.stream().findFirst().orElse(null);
-        
-        if (process == null) return false;
+
+        if (process == null)
+            return false;
 
         // process bitecek
-        if (process.processTime - 1 == 0) {       
+        if (process.processTime - 1 == 0) {
             System.out.println(String.format("Process(%s) finish", process.getId()));
             procesess.remove(0);
-        } 
+        }
 
-        process.run(tickTakTime);
+        // eger process calismasi basarisiz ise process silinir
+        if (!process.run(tickTakTime)) {
+            System.out.println(
+                    String.format("Process(%s) not enough resource",
+                            process.getId()));
+            procesess.remove(0);
+            return false;
+        }
 
         return true;
     }
-    
+
 }

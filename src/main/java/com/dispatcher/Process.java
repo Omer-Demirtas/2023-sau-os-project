@@ -12,14 +12,22 @@ public class Process {
     public Integer printerCount;
     public Integer scannerCount;
 
-    public void run(Integer ticktakTime) {
-        this.processTime-=ticktakTime;
-        System.out.println(String.format("Process(%s) running...",  id));
+    /**
+     * Run process
+     * 
+     * @param ticktakTime
+     * @return true if process ran successfully, false otherwise
+     */
+    public boolean run(Integer ticktakTime) {
+        this.processTime -= ticktakTime;
+        System.out.println(String.format("Process(%s) running...", id));
+
+        return Resource.allocate(this);
     }
 
-    public void run(Integer ticktakTime, Integer priority) {
+    public boolean run(Integer ticktakTime, Integer priority) {
         this.priority = priority;
-        run(ticktakTime);
+        return run(ticktakTime);
     }
 
     public Process(Long id, Integer processTime, Integer priority, Integer arriveTime) {
@@ -29,7 +37,8 @@ public class Process {
         this.processTime = processTime;
     }
 
-    public Process(Long id, Integer priority, Integer arriveTime, Integer memorySize, Integer cdCount, Integer modemCount, Integer printerCount, Integer scannerCount) {
+    public Process(Long id, Integer priority, Integer arriveTime, Integer memorySize, Integer cdCount,
+            Integer modemCount, Integer printerCount, Integer scannerCount) {
         this.id = id;
         this.cdCount = cdCount;
         this.printerCount = printerCount;
@@ -111,6 +120,5 @@ public class Process {
     public void setScannerCount(Integer scannerCount) {
         this.scannerCount = scannerCount;
     }
-
 
 }

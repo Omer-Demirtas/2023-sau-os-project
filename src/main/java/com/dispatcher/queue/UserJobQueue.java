@@ -15,7 +15,7 @@ public class UserJobQueue extends Queue {
     /*
      * Queue oluşturulurken 3 öncelik listesi oluşturulur.
      */
-    public UserJobQueue() { 
+    public UserJobQueue() {
         processPriorityList.add(new ArrayList<>());
         processPriorityList.add(new ArrayList<>());
         processPriorityList.add(new ArrayList<>());
@@ -29,7 +29,7 @@ public class UserJobQueue extends Queue {
 
     @Override
     public boolean process(Integer tickTakTime) {
-        //System.out.println("User Job Queue");
+        // System.out.println("User Job Queue");
 
         processPriorityList.forEach(t -> System.out.println("-> " + t.size()));
 
@@ -41,28 +41,34 @@ public class UserJobQueue extends Queue {
 
                 // İlgili process bitmiyorsa
                 if (process.getProcessTime() - tickTakTime > 0) {
-                    if (process.getPriority() != processPriorityList.size()) { 
+                    if (process.getPriority() != processPriorityList.size()) {
                         Integer processTime = process.getProcessTime();
-                        
-                        process.run(tickTakTime, process.getPriority() + 1);
 
-                        tickTakTime-=processTime;
+                        if (!runProcess(process, process.getPriority() + 1, tickTakTime, i, j)) {
+                            return false;
+                        }
+
+                        tickTakTime -= processTime;
 
                         processPriorityList.get(i).remove(j);
                         processPriorityList.get(i + 1).add(process);
                     } else { // Process en düşük öncelikteyse
                         Integer processTime = process.getProcessTime();
 
-                        process.run(tickTakTime);
-                    
-                        tickTakTime-=processTime;
+                        if (!runProcess(process, tickTakTime, i, j)) {
+                            return false;
+                        }
+
+                        tickTakTime -= processTime;
                     }
                 } else { // İlgili process bitiyor ise
                     Integer processTime = process.getProcessTime();
 
-                    process.run(tickTakTime);
+                    if (!runProcess(process, tickTakTime, i, j)) {
+                        return false;
+                    }
 
-                    tickTakTime-=processTime;
+                    tickTakTime -= processTime;
                     processPriorityList.get(i).remove(j);
                 }
 
@@ -74,5 +80,25 @@ public class UserJobQueue extends Queue {
 
         return true;
     }
-    
+
+    boolean runProcess(Process process, int tickTakTime, int i, int j) {
+        if (!process.run(tickTakTime, process.getPriority() + 1)) {
+            System.out.println(String.format("Process(%s) not enough resource", process.getId()));
+            processPriorityList.get(i).remove(j);
+            return false;
+        }
+
+        return true;
+    }
+
+    boolean runProcess(Process process, int priority, int tickTakTime, int i, int j) {
+        if (!process.run(tickTakTime, priority)) {
+            System.out.println(String.format("Process(%s) not enough resource", process.getId()));
+            processPriorityList.get(i).remove(j);
+            return false;
+        }
+
+        return true;
+    }
+
 }
