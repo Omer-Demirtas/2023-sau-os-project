@@ -1,4 +1,6 @@
-package main.java.com.dispatcher;
+package main.java.com.dispatcher.resource;
+
+import main.java.com.dispatcher.Process;
 
 public class Resource {
     public static Integer REMAINING_CD_COUNT = 2;
@@ -6,6 +8,7 @@ public class Resource {
     public static Integer REMAINING_PRINTER_COUNT = 2;
     public static Integer REMAINING_SCANNER_COUNT = 1;
     public static Integer REMAINING_MEMORY_SIZE = 1024;
+    public static Memory memory = new Memory(960);
 
     /**
      * Allocate resources to process
@@ -16,16 +19,19 @@ public class Resource {
         if (REMAINING_CD_COUNT >= process.getCdCount()
                 && REMAINING_MODEM_COUNT >= process.getModemCount()
                 && REMAINING_PRINTER_COUNT >= process.getPrinterCount()
-                && REMAINING_SCANNER_COUNT >= process.getScannerCount()
-                && REMAINING_MEMORY_SIZE >= process.getMemorySize()) {
+                && REMAINING_SCANNER_COUNT >= process.getScannerCount()) {
+            process.setId(System.currentTimeMillis());
             REMAINING_CD_COUNT -= process.getCdCount();
             REMAINING_MODEM_COUNT -= process.getModemCount();
             REMAINING_PRINTER_COUNT -= process.getPrinterCount();
             REMAINING_SCANNER_COUNT -= process.getScannerCount();
-            REMAINING_MEMORY_SIZE -= process.getMemorySize();
 
-            process.setId(System.currentTimeMillis());
-            return true;
+            // real time process ise memory allocate etmeye gerek yok
+            if (process.getPriority() == 0) {
+                return true;
+            } else {
+                return memory.allocateMemory(process);
+            }
         }
 
         return false;
@@ -40,7 +46,7 @@ public class Resource {
         REMAINING_MODEM_COUNT += process.getModemCount();
         REMAINING_PRINTER_COUNT += process.getPrinterCount();
         REMAINING_SCANNER_COUNT += process.getScannerCount();
-        REMAINING_MEMORY_SIZE += process.getMemorySize();
+        memory.deallocateMemory(process.getMemorySize());
 
         return true;
     }

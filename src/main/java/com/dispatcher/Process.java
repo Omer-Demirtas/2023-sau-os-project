@@ -1,16 +1,20 @@
 package main.java.com.dispatcher;
 
+import main.java.com.dispatcher.resource.Resource;
+
 public class Process {
     public Long id;
-    public Integer priority;
-    public Integer arriveTime;
-    public Integer memorySize;
-    public Integer processTime;
+    public Integer priority = 0;
+    public Integer arriveTime = 0;
+    public Integer memorySize = 0;
+    public Integer processTime = 0;
 
-    public Integer cdCount;
-    public Integer modemCount;
-    public Integer printerCount;
-    public Integer scannerCount;
+    public Integer cdCount = 0;
+    public Integer modemCount = 0;
+    public Integer printerCount = 1;
+    public Integer scannerCount = 0;
+
+    public Integer memoryStartAddr;
 
     /**
      * Run process
@@ -31,7 +35,6 @@ public class Process {
     }
 
     public Process(Long id, Integer processTime, Integer priority, Integer arriveTime) {
-        this.id = id;
         this.priority = priority;
         this.arriveTime = arriveTime;
         this.processTime = processTime;
@@ -39,7 +42,6 @@ public class Process {
 
     public Process(Long id, Integer priority, Integer arriveTime, Integer memorySize, Integer cdCount,
             Integer modemCount, Integer printerCount, Integer scannerCount) {
-        this.id = id;
         this.cdCount = cdCount;
         this.printerCount = printerCount;
         this.priority = priority;
@@ -121,4 +123,11 @@ public class Process {
         this.scannerCount = scannerCount;
     }
 
+    public Integer getMemoryStartAddr() {
+        return memoryStartAddr;
+    }
+
+    public void setMemoryStartAddr(Integer memoryStartAddr) {
+        this.memoryStartAddr = memoryStartAddr;
+    }
 }
