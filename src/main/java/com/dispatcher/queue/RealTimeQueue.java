@@ -2,10 +2,10 @@ package main.java.com.dispatcher.queue;
 
 import main.java.com.dispatcher.Process;
 
-public class RunTimeQueue extends Queue {
+public class RealTimeQueue extends Queue {
     String resource;
 
-    public RunTimeQueue(String resource) {
+    public RealTimeQueue(String resource) {
         this.resource = resource;
     }
 

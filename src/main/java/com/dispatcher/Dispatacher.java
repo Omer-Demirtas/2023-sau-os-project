@@ -8,7 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import main.java.com.dispatcher.queue.Queue;
-import main.java.com.dispatcher.queue.RunTimeQueue;
+import main.java.com.dispatcher.queue.RealTimeQueue;
 import main.java.com.dispatcher.queue.UserJobQueue;
 
 public class Dispatacher {
@@ -17,7 +17,7 @@ public class Dispatacher {
     List<Process> processes = new ArrayList<>();
 
     List<Queue> queues = List.of(
-        new RunTimeQueue(null),
+        new RealTimeQueue(null),
         new UserJobQueue()
     );
 
