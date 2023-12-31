@@ -42,7 +42,6 @@ public class Process {
             case NEW:
                 ColorfulLogger.log(this, "Process basladi, kimlik: " + this.id);
                 status = Status.ON_QUEUE;
-                break;
             case ON_QUEUE:
                 ColorfulLogger.log(this, "Process calismaya devam ediyor, kimlik: " + this.id);
                 break;
