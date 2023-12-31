@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.java.com.dispatcher.process.Process;
+import main.java.com.dispatcher.process.Status;
 
 public class UserJobQueue extends Queue {
 
@@ -62,6 +63,8 @@ public class UserJobQueue extends Queue {
                         tickTakTime -= processTime;
                     }
                 } else { // İlgili process bitiyor ise
+                    process.status = Status.TERMINATED;
+
                     Integer processTime = process.getProcessTime();
 
                     if (!runProcess(process, tickTakTime, i, j)) {

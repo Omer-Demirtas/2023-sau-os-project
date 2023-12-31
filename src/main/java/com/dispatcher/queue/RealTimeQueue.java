@@ -1,6 +1,7 @@
 package main.java.com.dispatcher.queue;
 
 import main.java.com.dispatcher.process.Process;
+import main.java.com.dispatcher.process.Status;
 
 public class RealTimeQueue extends Queue {
     String resource;
@@ -26,6 +27,7 @@ public class RealTimeQueue extends Queue {
         // process bitecek
         if (process.processTime - tickTakTime == 0) {
             System.out.println(String.format("Process(%s) finish", process.getId()));
+            process.status = Status.TERMINATED;
             // TODO: Resource deallocate
             procesess.remove(0);
         }

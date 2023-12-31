@@ -40,12 +40,14 @@ public class Process {
         // TODO: proses ilk defa mi calisiyor yoksa devam mi ediyor ona gore islem yapilacak
         switch (status) {
             case NEW:
-                ColorfulLogger.log(this, "Process basladi");
+                ColorfulLogger.log(this, "Process basladi, kimlik: " + this.id);
                 status = Status.ON_QUEUE;
                 break;
             case ON_QUEUE:
+                ColorfulLogger.log(this, "Process calismaya devam ediyor, kimlik: " + this.id);
                 break;
             case TERMINATED:
+                ColorfulLogger.log(this, "Process sonlandi, kimlik: " + this.id);
                 break;
         }
 
