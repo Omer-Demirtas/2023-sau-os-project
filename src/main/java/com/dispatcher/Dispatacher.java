@@ -67,7 +67,7 @@ public class Dispatacher {
                 }
 
                 processes.add(new Process(
-                    Long.parseLong(tokens[0].trim()),
+                    nums[0],
                     nums[1],
                     nums[2],
                     nums[3],

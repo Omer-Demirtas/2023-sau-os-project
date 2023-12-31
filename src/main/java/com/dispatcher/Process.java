@@ -18,7 +18,7 @@ public class Process {
 
     /**
      * Run process
-     * 
+     *
      * @param ticktakTime
      * @return true if process ran successfully, false otherwise
      */
@@ -34,21 +34,15 @@ public class Process {
         return run(ticktakTime);
     }
 
-    public Process(Long id, Integer processTime, Integer priority, Integer arriveTime) {
-        this.priority = priority;
+    public Process(Integer arriveTime, Integer priority, Integer processTime, Integer memorySize, Integer printerCount, Integer scannerCount, Integer modemCount, Integer cdCount) {
         this.arriveTime = arriveTime;
+        this.priority = priority;
         this.processTime = processTime;
-    }
-
-    public Process(Long id, Integer priority, Integer arriveTime, Integer memorySize, Integer cdCount,
-            Integer modemCount, Integer printerCount, Integer scannerCount) {
-        this.cdCount = cdCount;
-        this.printerCount = printerCount;
-        this.priority = priority;
-        this.arriveTime = arriveTime;
         this.memorySize = memorySize;
-        this.modemCount = modemCount;
+        this.printerCount = printerCount;
         this.scannerCount = scannerCount;
+        this.modemCount = modemCount;
+        this.cdCount = cdCount;
     }
 
     public Long getId() {
