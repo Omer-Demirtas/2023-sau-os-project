@@ -6,6 +6,10 @@ import java.util.List;
 import main.java.com.dispatcher.Process;
 
 public abstract class Queue {
+
+    void removeProcess(Process process) {
+        procesess.remove(process);
+    }
     List<Process> procesess = new ArrayList<>();
 
     public abstract void addProcess(Process process); 

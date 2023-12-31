@@ -1,20 +1,21 @@
 package main.java.com.dispatcher;
 
-import main.java.com.dispatcher.resource.Resource;
-
 public class Process {
     public Long id;
-    public Integer priority = 0;
-    public Integer arriveTime = 0;
-    public Integer memorySize = 0;
-    public Integer processTime = 0;
+    public Integer priority;
+    public Integer arriveTime;
+    public Integer memorySize;
+    public Integer processTime;
 
-    public Integer cdCount = 0;
-    public Integer modemCount = 0;
-    public Integer printerCount = 1;
-    public Integer scannerCount = 0;
+    public Integer cdCount;
+    public Integer modemCount;
+    public Integer printerCount;
+    public Integer scannerCount;
 
-    public Integer memoryStartAddr;
+
+    public boolean isRealTime() {
+        return this.priority == 0;
+    }
 
     /**
      * Run process
@@ -117,11 +118,4 @@ public class Process {
         this.scannerCount = scannerCount;
     }
 
-    public Integer getMemoryStartAddr() {
-        return memoryStartAddr;
-    }
-
-    public void setMemoryStartAddr(Integer memoryStartAddr) {
-        this.memoryStartAddr = memoryStartAddr;
-    }
 }
