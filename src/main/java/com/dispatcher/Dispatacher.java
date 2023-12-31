@@ -28,8 +28,6 @@ public class Dispatacher {
     );
 
     private void dispatch(Integer currentTime) {
-        System.out.println(String.format("Dispatch(%d)", currentTime));
-
         processes.stream().filter(p -> p.getArriveTime() == currentTime).forEach(process -> {
             if (process.isRealTime()) {
                 queues.get(0).addProcess(process);
@@ -44,7 +42,6 @@ public class Dispatacher {
     public void start() throws InterruptedException {
         final AtomicInteger time = new AtomicInteger(0);
         while(!isComplete()) {
-            System.out.println("time " + time);
             dispatch(time.getAndIncrement());
 
             // check for time out
@@ -54,7 +51,7 @@ public class Dispatacher {
                 if (queue.process(TICK_TAK_TIME)) break;
             }
 
-            Thread.sleep(1000);
+            //Thread.sleep(1000);
 
             if (time.get() == 100) {
                 break;

@@ -15,13 +15,11 @@ public class RealTimeQueue extends Queue {
 
     @Override
     public void addProcess(Process process) {
-        System.out.println(String.format("Process %s added", process.getId()));
         procesess.add(process);
     }
 
     @Override
     public boolean process(Integer tickTakTime) {
-        // System.out.println("Real Time Queue " + procesess.size());
         Process process = procesess.stream().findFirst().orElse(null);
 
         if (process == null)
@@ -29,7 +27,6 @@ public class RealTimeQueue extends Queue {
 
         // process bitecek
         if (process.processTime - tickTakTime == 0) {
-            System.out.println(String.format("Process(%s) finish", process.getId()));
             process.status = Status.TERMINATED;
             
             Resource.deallocate(process);

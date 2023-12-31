@@ -25,7 +25,6 @@ public class UserJobQueue extends Queue {
 
     @Override
     public void addProcess(Process process) {
-//        System.out.println(String.format("Process(%d) added", process.getId()));
         processPriorityList.get(process.getPriority() - 1).add(process);
     }
 
@@ -33,14 +32,16 @@ public class UserJobQueue extends Queue {
     public boolean process(Integer tickTakTime) {
         // System.out.println("User Job Queue");
 
-        processPriorityList.forEach(t -> System.out.println("-> " + t.size()));
+        //processPriorityList.forEach(t -> System.out.println("-> " + t.size()));
 
         for (int i = 0; i < processPriorityList.size(); i++) {
             List<Process> processList = processPriorityList.get(i);
 
             for (int j = 0; j < processList.size(); j++) {
                 Process process = processList.get(j);
-
+                if (process.getId() == 21) {
+                    System.out.println("asdsada");
+                }
                 // İlgili process bitmiyorsa
                 if (process.getProcessTime() - tickTakTime > 0) {
                     if (process.getPriority() != processPriorityList.size()) {
@@ -73,7 +74,6 @@ public class UserJobQueue extends Queue {
                     }
 
                     tickTakTime -= processTime;
-                    processPriorityList.get(i).remove(j);
                 }
 
                 if (tickTakTime <= 0) {
@@ -87,7 +87,7 @@ public class UserJobQueue extends Queue {
     }
 
     boolean runProcess(Process process, int tickTakTime, int i, int j) {
-        if (!process.run(tickTakTime, process.getPriority() + 1)) {
+        if (!process.run(tickTakTime, process.getPriority())) {
 //            System.out.println(String.format("Process(%s) not enough resource", process.getId()));
             processPriorityList.get(i).remove(j);
             return false;
@@ -98,8 +98,6 @@ public class UserJobQueue extends Queue {
 
     boolean runProcess(Process process, int priority, int tickTakTime, int i, int j) {
         if (!process.run(tickTakTime, priority)) {
-//            System.out.println(String.format("Process(%s) not enough resource", process.getId()));
-            processPriorityList.get(i).remove(j);
             return false;
         }
 
@@ -113,7 +111,7 @@ public class UserJobQueue extends Queue {
                 Process process = processList.get(j);
 
                 if (currentTime - process.getArriveTime() > 20) {
-                    ColorfulLogger.log(process, String.format("Proses (%s) zaman aşımına uğradı!", process.getId()));
+                    ColorfulLogger.logError(process, String.format("Zaman aşımına uğradı!", process.getId()));
                     processList.remove(j);
                 }
             }

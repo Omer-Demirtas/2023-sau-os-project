@@ -11,6 +11,8 @@ public enum Color {
     WHITE("\u001B[37m"),
     RESET("\u001B[0m");
 
+    private static Integer processCount = 0;
+
     private String value;
 
     Color(String value) {
@@ -22,6 +24,10 @@ public enum Color {
     }
 
     public static Color getRandomColor() {
-        return values()[(int) (Math.random() * values().length - 1)];
+        return values()[(int) (Math.random() * (values().length - 1))];
+    }
+    
+    public static Color getRandomColor(Process process) {
+        return Color.values()[process.getId().intValue() % (Color.values().length -1)];
     }
 }

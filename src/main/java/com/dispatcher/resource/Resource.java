@@ -18,18 +18,18 @@ public class Resource {
      * @return true if resources were allocated, false otherwise
      */
     public static boolean allocate(Process process) {
+        if (process.getId() != null) return true;
         if (REMAINING_CD_COUNT >= process.getCdCount()
                 && REMAINING_MODEM_COUNT >= process.getModemCount()
                 && REMAINING_PRINTER_COUNT >= process.getPrinterCount()
                 && REMAINING_SCANNER_COUNT >= process.getScannerCount()) {
-            process.setId(System.currentTimeMillis());
             REMAINING_CD_COUNT -= process.getCdCount();
             REMAINING_MODEM_COUNT -= process.getModemCount();
             REMAINING_PRINTER_COUNT -= process.getPrinterCount();
             REMAINING_SCANNER_COUNT -= process.getScannerCount();
 
             // real time process ise memory allocate etmeye gerek yok, reserved memory e sığıyorsa çalışabilir
-            if (process.getPriority() == 0) {
+            if (process.isRealTime()) {
                 return process.getMemorySize() <= RESERVED_MEMORY_SIZE;
             } else {
                 return memory.allocateMemory(process);
@@ -37,7 +37,7 @@ public class Resource {
         } else {
             // İlgili hata mesajını oluştur ve ekrana bas
             String errorMessage = createErrorMessage(process);
-            ColorfulLogger.log(process, errorMessage);
+            ColorfulLogger.logError(process, errorMessage);
 
             // Prosesi sil, işlemi gerçekleştirme
             return false;
@@ -47,18 +47,18 @@ public class Resource {
     private static String createErrorMessage(Process process) {
         // Hata mesajını oluştur ve geri döndür
         if (process.getCdCount() > REMAINING_CD_COUNT) {
-            return "HATA - Proses çok sayıda CD sürücü talep ediyor - proses silindi";
+            return "Proses çok sayıda CD sürücü talep ediyor - proses silindi";
         } else if (process.getModemCount() > REMAINING_MODEM_COUNT) {
-            return "HATA - Proses çok sayıda modem talep ediyor - proses silindi";
+            return "Proses çok sayıda modem talep ediyor - proses silindi";
         } else if (process.getPrinterCount() > REMAINING_PRINTER_COUNT) {
-            return "HATA - Proses çok sayıda yazıcı talep ediyor - proses silindi";
+            return "Proses çok sayıda yazıcı talep ediyor - proses silindi";
         } else if (process.getScannerCount() > REMAINING_SCANNER_COUNT) {
-            return "HATA - Proses çok sayıda tarayıcı talep ediyor - proses silindi";
+            return "Proses çok sayıda tarayıcı talep ediyor - proses silindi";
         } else if (process.getMemorySize() > TOTAL_MEMORY_SIZE - RESERVED_MEMORY_SIZE) {
-            return "HATA - Proses çok fazla bellek talep ediyor - proses silindi";
+            return "Proses çok fazla bellek talep ediyor - proses silindi";
         }
 
-        return "HATA - Bilinmeyen bir hata oluştu - proses silindi";
+        return "Bilinmeyen bir hata oluştu - proses silindi";
     }
 
     public static boolean deallocate(Process process) {

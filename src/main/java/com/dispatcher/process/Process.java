@@ -19,10 +19,15 @@ public class Process {
     public Color color;
     public Status status;
 
+    private static Integer processCount = 1;
+
     public boolean isRealTime() {
         return this.priority == 0;
     }
 
+    public void createId() {
+        setId((processCount++).longValue());
+    }
     /**
      * Run process
      *
@@ -31,7 +36,6 @@ public class Process {
      */
     public boolean run(Integer ticktakTime) {
         this.processTime -= ticktakTime;
-        System.out.println(String.format("Process(%s) running...", id));
 
         if (!Resource.allocate(this)) {
             return false;
@@ -39,13 +43,14 @@ public class Process {
 
         switch (status) {
             case NEW:
-                ColorfulLogger.log(this, "Process basladi, kimlik: " + this.id);
+                ColorfulLogger.log(this, "STARTING...");
                 status = Status.ON_QUEUE;
+                break;
             case ON_QUEUE:
-                ColorfulLogger.log(this, "Process calismaya devam ediyor, kimlik: " + this.id);
+                ColorfulLogger.log(this, "RUNNING...");
                 break;
             case TERMINATED:
-                ColorfulLogger.log(this, "Process sonlandi, kimlik: " + this.id);
+                ColorfulLogger.log(this, "COMPLETED...");
                 break;
         }
 
@@ -57,6 +62,17 @@ public class Process {
         return run(ticktakTime);
     }
 
+    @Override
+    public String toString() {
+        return String.format(
+            "id: %3s, priority: %5s, arrive time: %5s", 
+            this.id,
+            this.priority,
+            this.arriveTime,
+            this.memorySize
+        );
+    }
+
     public Process(Integer arriveTime, Integer priority, Integer processTime, Integer memorySize, Integer printerCount, Integer scannerCount, Integer modemCount, Integer cdCount) {
         this.arriveTime = arriveTime;
         this.priority = priority;
@@ -66,6 +82,8 @@ public class Process {
         this.scannerCount = scannerCount;
         this.modemCount = modemCount;
         this.cdCount = cdCount;
+
+        this.createId();
 
         this.color = Color.getRandomColor();
         this.status = Status.NEW;
