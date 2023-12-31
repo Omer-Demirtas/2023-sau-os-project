@@ -1,10 +1,9 @@
 package main.java.com.dispatcher.resource;
 
-import main.java.com.dispatcher.Process;
+import main.java.com.dispatcher.process.Process;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Memory {
 

@@ -1,4 +1,6 @@
-package main.java.com.dispatcher;
+package main.java.com.dispatcher.process;
+
+import main.java.com.dispatcher.resource.Resource;
 
 public class Process {
     public Long id;
@@ -12,6 +14,10 @@ public class Process {
     public Integer printerCount;
     public Integer scannerCount;
 
+    public Integer memoryStartAddr;
+
+    public Color color;
+    public Status status;
 
     public boolean isRealTime() {
         return this.priority == 0;
@@ -27,7 +33,23 @@ public class Process {
         this.processTime -= ticktakTime;
         System.out.println(String.format("Process(%s) running...", id));
 
-        return Resource.allocate(this);
+        if (!Resource.allocate(this)) {
+            return false;
+        }
+
+        // TODO: proses ilk defa mi calisiyor yoksa devam mi ediyor ona gore islem yapilacak
+        switch (status) {
+            case NEW:
+                ColorfulLogger.log(this, "Process basladi");
+                status = Status.ON_QUEUE;
+                break;
+            case ON_QUEUE:
+                break;
+            case TERMINATED:
+                break;
+        }
+
+        return true;
     }
 
     public boolean run(Integer ticktakTime, Integer priority) {
@@ -44,6 +66,9 @@ public class Process {
         this.scannerCount = scannerCount;
         this.modemCount = modemCount;
         this.cdCount = cdCount;
+
+        this.color = Color.getRandomColor();
+        this.status = Status.NEW;
     }
 
     public Long getId() {
@@ -118,4 +143,11 @@ public class Process {
         this.scannerCount = scannerCount;
     }
 
+    public Integer getMemoryStartAddr() {
+        return memoryStartAddr;
+    }
+
+    public void setMemoryStartAddr(Integer memoryStartAddr) {
+        this.memoryStartAddr = memoryStartAddr;
+    }
 }

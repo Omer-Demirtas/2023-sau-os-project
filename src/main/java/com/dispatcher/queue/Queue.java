@@ -3,13 +3,10 @@ package main.java.com.dispatcher.queue;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.com.dispatcher.Process;
+import main.java.com.dispatcher.process.Process;
 
 public abstract class Queue {
 
-    void removeProcess(Process process) {
-        procesess.remove(process);
-    }
     List<Process> procesess = new ArrayList<>();
 
     public abstract void addProcess(Process process); 
@@ -23,4 +20,10 @@ public abstract class Queue {
     Process getProcess() {
         return procesess.get(0);
     }
+
+    // TODO: implement
+//    public abstract boolean checkTimeOut();
+
+    // TODO: implement
+//    public abstract boolean isEmpty();
 }

@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Map;
 
+import main.java.com.dispatcher.process.Process;
 import main.java.com.dispatcher.queue.Queue;
 import main.java.com.dispatcher.queue.RealTimeQueue;
 import main.java.com.dispatcher.queue.UserJobQueue;
@@ -34,19 +35,14 @@ public class Dispatacher {
             } else {
                 queues.get(1).addProcess(process);
             }
-            process.setArriveTime(process.getArriveTime() - 1);  // Process'in varış zamanını azalt
         });
 
         processes.removeIf(process -> process.getArriveTime() == currentTime);
-
-        for (Queue queue : queues) {
-            if (queue.process(TICK_TAK_TIME)) break;
-        }
     }
 
-    public void start() {
+    public void start() throws InterruptedException {
         int time=0;
-        while (true) {
+        while(!isComplete()) {
             System.out.println("time " + time);
             dispatch(time++);
 
@@ -54,39 +50,20 @@ public class Dispatacher {
                 if (queue.process(TICK_TAK_TIME)) break;
             }
 
-            checkProcessStatus();
+            Thread.sleep(1000);
+
             if (time == 100) {
                 break;
             }
         }
     }
 
-
-
-
-    private void checkProcessStatus() {
-        for (Process process : processes) {
-            Long processId = process.getId();
-
-            if (processStatus.containsKey(processId)) {
-                System.out.println(processStatus.get(processId));
-                processStatus.remove(processId);
-            }
-
-            if (process.getProcessTime() <= 0) {
-                processStatus.put(processId, generateCompletedStatus(process));
-            } else if (process.getArriveTime() <= 0) {
-                processStatus.put(processId, "HATA - Proses zaman aşımı (20 sn de tamamlanamadı)");
-            }
-        }
+    boolean isComplete() {
+// TODO
+//        return processes.isEmpty() && queues.stream().allMatch(Queue::isEmpty);
+        return false;
     }
 
-    private String generateCompletedStatus(Process process) {
-        return String.format("%d %d %d %d %d %d %d %d COMPLETED",
-                process.getId(), process.getPriority(), process.getArriveTime(),
-                process.getMemorySize(), process.getPrinterCount(),
-                process.getScannerCount(), process.getModemCount(), process.getCdCount());
-    }
     public void readFile(String path) {
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             String line;

@@ -1,6 +1,7 @@
 package main.java.com.dispatcher.resource;
 
-import main.java.com.dispatcher.Process;
+import main.java.com.dispatcher.process.ColorfulLogger;
+import main.java.com.dispatcher.process.Process;
 
 public class Resource {
     public static Integer REMAINING_CD_COUNT = 2;
@@ -33,9 +34,31 @@ public class Resource {
             } else {
                 return memory.allocateMemory(process);
             }
+        } else {
+            // İlgili hata mesajını oluştur ve ekrana bas
+            String errorMessage = createErrorMessage(process);
+            ColorfulLogger.log(process, errorMessage);
+
+            // Prosesi sil, işlemi gerçekleştirme
+            return false;
+        }
+    }
+
+    private static String createErrorMessage(Process process) {
+        // Hata mesajını oluştur ve geri döndür
+        if (process.getCdCount() > REMAINING_CD_COUNT) {
+            return "HATA - Proses çok sayıda CD sürücü talep ediyor - proses silindi";
+        } else if (process.getModemCount() > REMAINING_MODEM_COUNT) {
+            return "HATA - Proses çok sayıda modem talep ediyor - proses silindi";
+        } else if (process.getPrinterCount() > REMAINING_PRINTER_COUNT) {
+            return "HATA - Proses çok sayıda yazıcı talep ediyor - proses silindi";
+        } else if (process.getScannerCount() > REMAINING_SCANNER_COUNT) {
+            return "HATA - Proses çok sayıda tarayıcı talep ediyor - proses silindi";
+        } else if (process.getMemorySize() > TOTAL_MEMORY_SIZE - RESERVED_MEMORY_SIZE) {
+            return "HATA - Proses çok fazla bellek talep ediyor - proses silindi";
         }
 
-        return false;
+        return "HATA - Bilinmeyen bir hata oluştu - proses silindi";
     }
 
     public static boolean deallocate(Process process) {
@@ -47,7 +70,10 @@ public class Resource {
         REMAINING_MODEM_COUNT += process.getModemCount();
         REMAINING_PRINTER_COUNT += process.getPrinterCount();
         REMAINING_SCANNER_COUNT += process.getScannerCount();
-        memory.deallocateMemory(process.getMemorySize());
+
+        if (process.getPriority() > 0) {
+            memory.deallocateMemory(process.getMemoryStartAddr());
+        }
 
         return true;
     }
