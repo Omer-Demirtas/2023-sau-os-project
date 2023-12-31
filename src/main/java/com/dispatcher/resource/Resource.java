@@ -7,8 +7,9 @@ public class Resource {
     public static Integer REMAINING_MODEM_COUNT = 1;
     public static Integer REMAINING_PRINTER_COUNT = 2;
     public static Integer REMAINING_SCANNER_COUNT = 1;
-    public static Integer REMAINING_MEMORY_SIZE = 1024;
-    public static Memory memory = new Memory(960);
+    public static Integer TOTAL_MEMORY_SIZE = 1024;
+    public static Integer RESERVED_MEMORY_SIZE = 64;
+    public static Memory memory = new Memory(TOTAL_MEMORY_SIZE - RESERVED_MEMORY_SIZE);
 
     /**
      * Allocate resources to process
@@ -26,9 +27,9 @@ public class Resource {
             REMAINING_PRINTER_COUNT -= process.getPrinterCount();
             REMAINING_SCANNER_COUNT -= process.getScannerCount();
 
-            // real time process ise memory allocate etmeye gerek yok
+            // real time process ise memory allocate etmeye gerek yok, reserved memory e sığıyorsa çalışabilir
             if (process.getPriority() == 0) {
-                return true;
+                return process.getMemorySize() <= RESERVED_MEMORY_SIZE;
             } else {
                 return memory.allocateMemory(process);
             }
