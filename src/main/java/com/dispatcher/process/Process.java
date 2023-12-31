@@ -37,7 +37,6 @@ public class Process {
             return false;
         }
 
-        // TODO: proses ilk defa mi calisiyor yoksa devam mi ediyor ona gore islem yapilacak
         switch (status) {
             case NEW:
                 ColorfulLogger.log(this, "Process basladi, kimlik: " + this.id);

@@ -21,9 +21,7 @@ public abstract class Queue {
         return procesess.get(0);
     }
 
-    // TODO: implement
-//    public abstract boolean checkTimeOut();
+    public abstract void checkTimeOut(int currentTime);
 
-    // TODO: implement
-//    public abstract boolean isEmpty();
+    public abstract boolean isEmpty();
 }

@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import main.java.com.dispatcher.process.Process;
 import main.java.com.dispatcher.queue.Queue;
@@ -41,10 +42,13 @@ public class Dispatacher {
     }
 
     public void start() throws InterruptedException {
-        int time=0;
+        final AtomicInteger time = new AtomicInteger(0);
         while(!isComplete()) {
             System.out.println("time " + time);
-            dispatch(time++);
+            dispatch(time.getAndIncrement());
+
+            // check for time out
+            queues.forEach(e -> e.checkTimeOut(time.get()));
 
             for (Queue queue : queues) {
                 if (queue.process(TICK_TAK_TIME)) break;
@@ -52,16 +56,14 @@ public class Dispatacher {
 
             Thread.sleep(1000);
 
-            if (time == 100) {
+            if (time.get() == 100) {
                 break;
             }
         }
     }
 
     boolean isComplete() {
-// TODO
-//        return processes.isEmpty() && queues.stream().allMatch(Queue::isEmpty);
-        return false;
+        return processes.isEmpty() && queues.stream().allMatch(Queue::isEmpty);
     }
 
     public void readFile(String path) {

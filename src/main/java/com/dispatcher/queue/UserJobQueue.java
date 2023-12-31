@@ -3,6 +3,7 @@ package main.java.com.dispatcher.queue;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.java.com.dispatcher.process.ColorfulLogger;
 import main.java.com.dispatcher.process.Process;
 import main.java.com.dispatcher.process.Status;
 
@@ -24,7 +25,7 @@ public class UserJobQueue extends Queue {
 
     @Override
     public void addProcess(Process process) {
-        System.out.println(String.format("Process(%d) added", process.getId()));
+//        System.out.println(String.format("Process(%d) added", process.getId()));
         processPriorityList.get(process.getPriority() - 1).add(process);
     }
 
@@ -87,24 +88,41 @@ public class UserJobQueue extends Queue {
 
     boolean runProcess(Process process, int tickTakTime, int i, int j) {
         if (!process.run(tickTakTime, process.getPriority() + 1)) {
-            System.out.println(String.format("Process(%s) not enough resource", process.getId()));
+//            System.out.println(String.format("Process(%s) not enough resource", process.getId()));
             processPriorityList.get(i).remove(j);
             return false;
         }
 
-        // TODO: process run cagirilacak
         return true;
     }
 
     boolean runProcess(Process process, int priority, int tickTakTime, int i, int j) {
         if (!process.run(tickTakTime, priority)) {
-            System.out.println(String.format("Process(%s) not enough resource", process.getId()));
+//            System.out.println(String.format("Process(%s) not enough resource", process.getId()));
             processPriorityList.get(i).remove(j);
             return false;
         }
 
-        // TODO: process run cagirilacak
         return true;
+    }
+
+    @Override
+    public void checkTimeOut(int currentTime) {
+        for (List<Process> processList : processPriorityList) {
+            for (int j = 0; j < processList.size(); j++) {
+                Process process = processList.get(j);
+
+                if (currentTime - process.getArriveTime() > 20) {
+                    ColorfulLogger.log(process, String.format("Proses (%s) zaman aşımına uğradı!", process.getId()));
+                    processList.remove(j);
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return processPriorityList.stream().allMatch(List::isEmpty);
     }
 
 }

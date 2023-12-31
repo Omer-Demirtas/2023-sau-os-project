@@ -3,6 +3,8 @@ package main.java.com.dispatcher.queue;
 import main.java.com.dispatcher.process.Process;
 import main.java.com.dispatcher.process.Status;
 
+import java.util.List;
+
 public class RealTimeQueue extends Queue {
     String resource;
 
@@ -34,14 +36,24 @@ public class RealTimeQueue extends Queue {
 
         // eger process calismasi basarisiz ise process silinir
         if (!process.run(tickTakTime)) {
-            System.out.println(
-                    String.format("Process(%s) not enough resource",
-                            process.getId()));
+//            System.out.println(
+//                    String.format("Process(%s) not enough resource",
+//                            process.getId()));
             procesess.remove(0);
             return false;
         }
 
         return true;
+    }
+
+    @Override
+    public void checkTimeOut(int currentTime) {
+        return;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return procesess.isEmpty();
     }
 
 }
